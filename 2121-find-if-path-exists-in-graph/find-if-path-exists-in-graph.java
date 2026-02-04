@@ -1,8 +1,8 @@
 class Solution {
     public boolean validPath(int n, int[][] edges, int source, int destination) {
-        List<List<Integer>> list=new ArrayList<>();
         int e=edges.length;
-        for(int i=0;i<n;i++){
+        List<List<Integer>> list = new ArrayList<>();
+        for(int i=0;i<=n;i++){
             list.add(new ArrayList<>());
         }
         boolean visited[]=new boolean[n];
@@ -13,18 +13,27 @@ class Solution {
             list.get(u).add(v);
             list.get(v).add(u);
         }
-        return dfs(n,source,destination,edges,list,visited);
+        return bfs(source,destination,list,visited);
     }
-    boolean dfs(int n,int source,int destination,int edges[][], List<List<Integer>> list,boolean visited[]){
-        if(source==destination)
-        return true;
-        if(visited[source]==true)
-        return false;
-        visited[source]=true;
 
-        for(int neighbour:list.get(source)){
-            if(dfs(n,neighbour,destination,edges,list,visited)==true)
+    boolean bfs(int source,int destination, List<List<Integer>> list,boolean visited[]){
+
+        Queue<Integer> que=new LinkedList<>();
+        que.add(source);
+        visited[source]=true;
+        while(!que.isEmpty()){
+            int curr=que.poll();
+            if(curr==destination)
             return true;
+            for(int neigh:list.get(curr)){
+                if(visited[neigh]==false){
+                que.add(neigh);
+                visited[neigh]=true;
+                
+                
+                }
+            }
+        
         }
         return false;
     }
