@@ -1,40 +1,47 @@
 class Solution {
-    public boolean validPath(int n, int[][] edges, int source, int destination) {
-        int e=edges.length;
-        List<List<Integer>> list = new ArrayList<>();
-        for(int i=0;i<=n;i++){
-            list.add(new ArrayList<>());
-        }
-        boolean visited[]=new boolean[n];
-        for(int i=0;i<e;i++){
-            int u=edges[i][0];
-            int v=edges[i][1];
+    static int par[],rank[];
 
-            list.get(u).add(v);
-            list.get(v).add(u);
+    // using DSU 
+
+    public boolean validPath(int n, int[][] edges, int source, int destination) {
+        
+         par=new int[n];
+         rank=new int[n];
+         for(int i=0;i<n;i++){
+            par[i]=i;
+            rank[i]=0;
         }
-        return bfs(source,destination,list,visited);
+        for(int edge[]:edges){
+            int x=edge[0];
+            int y=edge[1];
+            union(x,y);
+            
+        }
+        if(find(source)==find(destination))
+        return true;
+        return false;
+    }
+    int find(int node){
+        if(node==par[node])
+        return node;
+
+        return par[node]=find(par[node]);
     }
 
-    boolean bfs(int source,int destination, List<List<Integer>> list,boolean visited[]){
+    void union(int x,int y){
+        int x_par=find(x);
+        int y_par=find(y);
+        if(x_par==y_par)
+        return;
 
-        Queue<Integer> que=new LinkedList<>();
-        que.add(source);
-        visited[source]=true;
-        while(!que.isEmpty()){
-            int curr=que.poll();
-            if(curr==destination)
-            return true;
-            for(int neigh:list.get(curr)){
-                if(visited[neigh]==false){
-                que.add(neigh);
-                visited[neigh]=true;
-                
-                
-                }
-            }
-        
+        if(rank[x_par]>rank[y_par])
+            par[y_par]=x_par;
+        else if(rank[y_par]>rank[x_par])
+            par[x_par]=y_par;
+        else
+        {
+            par[x_par]=y_par;
+            rank[y_par]++;
         }
-        return false;
     }
 }
